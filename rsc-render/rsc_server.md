@@ -62,7 +62,7 @@ const htmlStream = await workUnitAsyncStorage.run(
 )
 ```
 
-- `workUnitAsyncStorage`可以看作是`node`的`AsyncLocalStorage`, 用来统一管理异步状态，后面会同意介绍`AsyncLocalStorage`在`Next.js`中的应用
+- `workUnitAsyncStorage`可以看作是`node`的`AsyncLocalStorage`, 用来统一管理异步状态，后面会统一介绍`AsyncLocalStorage`在`Next.js`中的应用
 - `<App />`组件便是最终会渲染到客户端的`Root`组件，`RSC Payload`便是在其内部初始化注入的
   
 ## useFlightStream
@@ -80,7 +80,15 @@ const response = React.use(
   )
 )
 ```
-`useFlightStream`会在`reactServerStream`中收集`RSC Payload`，并在`htmlString`中注入`__next_f`
+`useFlightStream`会在`reactServerStream`中收集`RSC Payload`，随后会将其注入到`htmlString`的`__next_f`中
 
-接下来就着重介绍下`useFlightStream`的实现
+
+通过上面`useFlightStream`大致流程的介绍，我们可以先设立两个出发点🙋
+
+1. `reactServerStream`是什么？
+2. `RSC Payload`是如何注入到`HTML`中的？
+  
+## reactServerStream
+...
+
 
