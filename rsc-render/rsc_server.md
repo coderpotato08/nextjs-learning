@@ -67,7 +67,7 @@ const htmlStream = await workUnitAsyncStorage.run(
   
 ## useFlightStream
 
-这里便是生成`RSC Payload`并在`htmlString`中注入的地方。
+这里便是将`RSC Payload`注入`htmlString`的地方。
 
 ```tsx
 // packages/next/src/server/app-render/app-render.tsx
@@ -85,10 +85,48 @@ const response = React.use(
 
 通过上面`useFlightStream`大致流程的介绍，我们可以先设立两个出发点🙋
 
-1. `reactServerStream`是什么？
-2. `RSC Payload`是如何注入到`HTML`中的？
-  
-## reactServerStream
-...
+1. `RSC Payload`是如何生成的？
+2. `reactServerStream`是什么？
+
+## RSC Payload
+
+`RSC Payload`是`Next.js`在服务端生成的`RSC`负载，它会被注入到`htmlString`的`__next_f`中，并在客户端通过`__next_f`进行渲染
+
+`RSC Payload`的通过`generateDynamicRSCPayload` 来生成
+
+```ts
+/** packages/next/src/server/app-render/app-render.tsx */
+const RSCPayload: RSCPayload & {
+  /** Only available during cacheComponents development builds. Used for logging errors. */
+  _validation?: Promise<React.ReactNode>
+  /** asyncLocakStorage.run(store, () => {}, ...args) */
+} = await workUnitAsyncStorage.run(
+  requestStore,
+  generateDynamicRSCPayload,
+  ctx,
+  options
+)
+```
+最终会生成如下的数据结构
+
+```ts
+// server action response
+if (options?.actionResult) {
+  return {
+    a: options.actionResult,
+    f: flightData,
+    b: ctx.sharedContext.buildId,
+  }
+}
+
+//  RSC response.
+return {
+  b: ctx.sharedContext.buildId,
+  f: flightData,
+  S: workStore.isStaticGeneration,
+}
+```
+flightData 是 RSC 负载的一部分，它包含了 RSC 组件的渲染信息和状态。
+
 
 

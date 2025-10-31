@@ -1,5 +1,9 @@
 # RSC整体渲染流程
 
+## 流程图
+
+![流程图](../assets/imgs/ssr-render-flow.png)
+
 ## rsc从服务端到客户端的渲染流程
 
 初始加载序列
